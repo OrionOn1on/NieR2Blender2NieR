@@ -30,6 +30,7 @@ from .lay.exporter.layExportOperator import ExportNierLay
 from .lay.importer.layImportOperator import ImportNierLay
 from .wmb.exporter.wmbExportOperator import ExportNierWmb
 from .wmb.exporter.wmbExportOperator import ExportMGRRWmb
+from .wmb.exporter.wmbMaterialJSON import *
 from .wmb.importer.wmbImportOperator import ImportNierWmb
 from .scr.importer.scrImportOperator import ImportSCR
 from .scr.exporter.scrExportOperator import ExportSCR
@@ -106,6 +107,7 @@ classes = (
     ImportNierSar,
     ImportNierGaArea,
     ImportNierYaxXml,
+    
     ExportNierWmb,
     ExportMGRRWmb,
     ExportSCR,
@@ -114,6 +116,7 @@ classes = (
     ExportNierLay,
     ExportNierGaArea,
     ExtractNierWtaWtp,
+    
     CreateLayVisualization,
     NierObjectMenu,
     RecalculateObjectIndices,
@@ -122,6 +125,11 @@ classes = (
     DeleteLooseGeometrySelected,
     DeleteLooseGeometryAll,
     RipMeshByUVIslands,
+    WMBMaterialToJSON,
+    WMBMaterialFromJSON,
+    WMBCopyMaterialJSON,
+    WMBPasteMaterialJSON,
+    WMBMaterialJSONPanel
 )
 
 preview_collections = {}
@@ -150,6 +158,7 @@ def register():
     bpy.types.Object.UNKNOWN_collisionType = bpy.props.IntProperty(name="Unknown Collision Type", min=0, max=255, update=updateCollisionType)
     bpy.types.Object.slidable = bpy.props.BoolProperty(name="Slidable/Modifier")
     bpy.types.Object.surfaceType = bpy.props.EnumProperty(name="Surface Type", items=surfaceTypes)
+    bpy.types.Material.wmb_mat_as_json = bpy.props.StringProperty(name="JSON")
 
     bpy.app.handlers.load_post.append(checkCustomPanelsEnableDisable)
     bpy.app.handlers.load_post.append(checkOldVersionMigration)
