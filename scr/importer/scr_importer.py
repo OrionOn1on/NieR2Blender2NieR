@@ -13,7 +13,8 @@ class ImportSCR:
         #print(file_path, context)
         trueFilePath = file_path # thanks for the var reuse
         head = os.path.split(file_path)[0]
-        with open(file_path, 'rb') as f:
+        if os.path.exists(file_path): # not always
+          with open(file_path, 'rb') as f:
             id = f.read(4)
             print('ID read')
             if id != b'SCR\x00':

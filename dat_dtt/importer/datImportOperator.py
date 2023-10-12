@@ -45,9 +45,13 @@ def importDtt(only_extract, filepath, transform=None):
         if not os.path.exists(scr_filepath): # try based on the dat name
             scr_filepath = os.path.join(extract_dir, tailless_tail + '.dat', tailless_tail + '.scr')
         if not os.path.exists(scr_filepath):
-            print("Could not find model file in DAT! Please import WMB manually.")
-            ShowMessageBox("Could not find model file in DAT! Please import WMB manually.", "No Model Found", "ERROR")
-            only_extract = True
+            ly2_filepath = scr_filepath[:-4] + ".ly2"
+            if os.path.exists(ly2_filepath): # props only
+                print("Found prop list, loading that")
+            else:
+                print("Could not find model file in DAT! Please import WMB manually.")
+                ShowMessageBox("Could not find model file in DAT! Please import WMB manually.", "No Model Found", "ERROR")
+                only_extract = True
 
     # WTA/WTP
     wtaPath = os.path.join(extract_dir, tailless_tail + '.dat', tailless_tail + '.wta')
