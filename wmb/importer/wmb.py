@@ -114,7 +114,7 @@ class wmb3_vertex(object):
 			# self.textureV2 = read_float16(wmb_fp)
 			self.textureU2, \
 			self.textureV2 = wmb3_vertex.smartReadUV2.read(wmb_fp)
-		if vertex_flags in {7, 10, 11}:
+		if vertex_flags in {7, 8, 10, 11}:
 			self.boneIndices = read_uint8_x4(wmb_fp)
 			self.boneWeights = [x / 255 for x in read_uint8_x4(wmb_fp)]
 		if vertex_flags in {4, 5, 12, 14}:
@@ -130,6 +130,13 @@ class wmb3_vertexExData(object):
 		SmartIO.float16,
 		SmartIO.float16,
 		SmartIO.uint64,
+	)
+	smartRead8 = SmartIO.makeFormat(
+		SmartIO.float16,
+		SmartIO.float16,
+		SmartIO.uint64,
+		SmartIO.float16,
+		SmartIO.float16,
 	)
 	smartRead10 = SmartIO.makeFormat(
 		SmartIO.float16,
@@ -193,6 +200,14 @@ class wmb3_vertexExData(object):
 			self.textureU2, \
 			self.textureV2, \
 			self.normal = wmb3_vertexExData.smartRead7.read(wmb_fp)
+			self.normal = hex(self.normal)
+
+		elif vertex_flags == 8: #0x8
+			self.textureU2, \
+			self.textureV2, \
+			self.normal, \
+			self.textureU3, \
+			self.textureV3 = wmb3_vertexExData.smartRead8.read(wmb_fp)
 			self.normal = hex(self.normal)
 
 		elif vertex_flags == 10: #0xa
