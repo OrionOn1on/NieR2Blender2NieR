@@ -89,8 +89,11 @@ class c_vertexGroup(object):
 
 
         elif len(self.blenderObjects[0].data.uv_layers) == 3:       # 5, 11
-            if self.blenderObjects[0]['boneSetIndex'] != -1:        # >> 11
-                self.vertexFlags = 11
+            if self.blenderObjects[0]['boneSetIndex'] != -1:        # >> 8, 11
+                if self.blenderObjects[0].data.vertex_colors:
+                    self.vertexFlags = 11
+                else:
+                    self.vertexFlags = 8
             else:                                                   # >> 5
                 self.vertexFlags = 5
 
@@ -107,7 +110,7 @@ class c_vertexGroup(object):
             self.vertexExDataSize = 8       
         elif self.vertexFlags in {5, 7}:                                          
             self.vertexExDataSize = 12                                    
-        elif self.vertexFlags in {10, 14}:
+        elif self.vertexFlags in {8, 10, 14}:
             self.vertexExDataSize = 16
         elif self.vertexFlags in {11, 12}:
             self.vertexExDataSize = 20
@@ -183,7 +186,7 @@ class c_vertexGroup(object):
                     # Bones
                     boneIndexes = []
                     boneWeights = []
-                    if self.vertexFlags in {7, 10, 11}:
+                    if self.vertexFlags in {7, 8, 10, 11}:
                         # Bone Indices
                         for groupRef in bvertex.groups:
                             if len(boneIndexes) < 4:
@@ -256,7 +259,7 @@ class c_vertexGroup(object):
                             print("Object had no vertex colour layer when one was expected - creating one.")
                             new_vertex_colors = bvertex_obj_obj.data.vertex_colors.new()
 
-                    if self.vertexFlags in {1, 4, 5, 7, 10, 11, 12, 14}:
+                    if self.vertexFlags in {1, 4, 5, 7, 8, 10, 11, 12, 14}:
                         normal = [loop.normal[0], loop.normal[1], loop.normal[2], 0]
                     
                     if self.vertexFlags == 5:
@@ -266,6 +269,12 @@ class c_vertexGroup(object):
                     elif self.vertexFlags == 7:
                         uv2 = get_blenderUVCoords(self, bvertex_obj_obj, loop.index, 1)
                         uv_maps.append(uv2)
+
+                    elif self.vertexFlags == 8:
+                        uv2 = get_blenderUVCoords(self, bvertex_obj_obj, loop.index, 1)
+                        uv_maps.append(uv2)
+                        uv3 = get_blenderUVCoords(self, bvertex_obj_obj, loop.index, 2)
+                        uv_maps.append(uv3)
 
                     elif self.vertexFlags == 10:
                         uv2 = get_blenderUVCoords(self, bvertex_obj_obj, loop.index, 1)
@@ -278,7 +287,7 @@ class c_vertexGroup(object):
                         uv_maps.append(uv2)
                         loop_color = bvertex_obj_obj.data.vertex_colors.active.data[loop.index].color
                         color = [int(loop_color[0]*255), int(loop_color[1]*255), int(loop_color[2]*255), int(loop_color[3]*255)]
-                        uv3 = get_blenderUVCoords(self, bvertex_obj_obj, loop.index, 1)
+                        uv3 = get_blenderUVCoords(self, bvertex_obj_obj, loop.index, 2)
                         uv_maps.append(uv3)
 
                     elif self.vertexFlags == 12:
