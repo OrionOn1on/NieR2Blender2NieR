@@ -12,6 +12,7 @@ class MotFile:
 	def fromFile(self, file: BufferedReader):
 		self.header = MotHeader()
 		self.header.fromFile(file)
+		file.seek(self.header.recordsOffset)
 		self.records = [
 			MotRecord().fromFile(file)
 			for _ in range(self.header.recordsCount)
@@ -47,11 +48,15 @@ class MotHeader:
 		self.recordsOffset = read_uint32(file)
 		self.recordsCount = read_uint32(file)
 		self.unknown = read_uint32(file)
-		self.animationName = file.read(20).decode("utf-8").rstrip("\0")
+		animationNameBytes = file.read(20)
+		if animationNameBytes[0] == 0: # no name????
+			self.animationName = "NoName"
+		else:
+			self.animationName = animationNameBytes.decode("utf-8").rstrip("\0")
 	
 	def fillDefaults(self):
 		self.magic = 0x746F6D
-		self.hash = 538051589
+		self.hash = 0x20120405
 		self.flag = 0
 		self.frameCount = 0
 		self.recordsOffset = 0

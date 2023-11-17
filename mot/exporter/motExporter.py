@@ -24,6 +24,8 @@ def getAllAnimationObjects(arm: bpy.types.Object) -> List[AnimationObject]:
 		dataPath = curve.data_path
 		if dataPath.startswith("pose.bones["):
 			boneName = re.search(r"pose\.bones\[\"(.*)\"\]", dataPath).group(1)
+			if boneName == "bone72":
+				continue
 			bone = arm.pose.bones[boneName]
 			animObj.bone = bone
 			animObj.object = None
@@ -198,6 +200,9 @@ def exportMot(path: str, patchExisting: bool):
 	arm = getArmatureObject()
 	if arm is None:
 		raise Exception("No armature found")
+	if arm.animation_data.action.name == "NoName":
+		print("Skipping export, wacky noname file")
+		return
 	
 	# get animation data
 	animObjs = getAllAnimationObjects(arm)
@@ -241,4 +246,4 @@ def exportMot(path: str, patchExisting: bool):
 	with open(path, "wb") as f:
 		file.writeToFile(f)
 
-	print("Done ;)")
+	print("Export done ;)")

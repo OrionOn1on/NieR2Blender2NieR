@@ -41,7 +41,8 @@ def importMot(file: str, printProgress: bool = True) -> None:
 	record: MotRecord
 	for record in records:
 		if not record.getBone() and record.boneIndex != -1:
-			print(f"WARNING: Bone {record.boneIndex} not found in armature")
+			if printProgress:
+				print(f"WARNING: Bone {record.boneIndex} not found in armature")
 			continue
 		motRecords.append(record)
 

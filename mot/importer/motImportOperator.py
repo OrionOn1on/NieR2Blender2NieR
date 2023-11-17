@@ -4,6 +4,7 @@ from bpy_extras.io_utils import ImportHelper
 import os
 
 from .motImporter import importMot
+from ..exporter.motExporter import exportMot
 
 class ImportNierMot(bpy.types.Operator, ImportHelper):
     """Import a Nier Animation mot file"""
@@ -26,6 +27,7 @@ class ImportNierMot(bpy.types.Operator, ImportHelper):
             for i, file in enumerate(allMotFiles):
                 print(f"Importing {file} ({i+1}/{len(allMotFiles)})")
                 importMot(os.path.join(path, file), not self.bulkImport)
+                exportMot(os.path.join(path, "nobacksheath\\", file), False)
 
         if self.bulkImport:
             print(f"Imported {len(allMotFiles)} mot files from {path}")
