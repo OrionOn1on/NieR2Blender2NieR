@@ -37,14 +37,14 @@ def drawMultilineLabel(context, text, parent):
     for text_line in text_lines:
         col.label(text=text_line)
 
-def getUsedMaterials():
+def getUsedMaterials(collectionName='WMB'):
     materials = []
     falseMaterials = [] # {}
     meshOrder = []
     # i hate wmb i hate wmb
     
-    for obj in sorted([x for x in allObjectsInCollectionInOrder('WMB') if x.type == "MESH"], key=lambda mesh: mesh['ID']):
-        # fortunately I don't need to do this because I just added a material ID
+    for obj in sorted([x for x in allObjectsInCollectionInOrder(collectionName) if x.type == "MESH"], key=lambda mesh: mesh['ID']):
+        # fortunately I don't need to do this because I added a material ID
         """
         mesh_name = obj.name.split("-")[1]
         if mesh_name not in falseMaterials:
