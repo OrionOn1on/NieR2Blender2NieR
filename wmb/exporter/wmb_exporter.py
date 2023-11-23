@@ -43,7 +43,7 @@ def main(filepath, wmb4=False, collectionName="WMB"):
     
     generated_data = c_generate_data(wmb4, collectionName)
     print('-=# All Data Generated. Writing WMB... #=-')
-    create_wmb_header(wmb_file, generated_data, wmb4)
+    create_wmb_header(wmb_file, generated_data, wmb4, collectionName)
     
     if not wmb4:
         print('Writing bones.')

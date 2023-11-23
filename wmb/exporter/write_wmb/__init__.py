@@ -106,7 +106,7 @@ def create_wmb_colTreeNodes(wmb_file, data):
         write_Int32(wmb_file, colTreeNode[2])                              # left
         write_Int32(wmb_file, colTreeNode[3])                              # right
 
-def create_wmb_header(wmb_file, data, wmb4=False):
+def create_wmb_header(wmb_file, data, wmb4=False, collectionName="WMB"):
 
     print('Writing header:')
     for char in ('WMB3' if not wmb4 else 'WMB4'):               # id
@@ -232,7 +232,13 @@ def create_wmb_header(wmb_file, data, wmb4=False):
     else:
         write_uInt32(wmb_file, data.vertexFormat)
         
-        write_Int16(wmb_file, 0 if data.numBones > 0 else -1) # TODO should be unsigned?
+        if data.numBones > 0:
+            write_Int16(wmb_file, 0)
+        elif collectionName != "WMB": # TODO better check for SCR-ness
+            write_Int16(wmb_file, 0)
+        else:
+            write_Int16(wmb_file, -1)
+        
         if data.vertexFormat > 0x107: # TODO more precise
             write_Int16(wmb_file, -1)
         else:
