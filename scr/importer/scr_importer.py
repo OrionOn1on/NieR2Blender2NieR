@@ -26,40 +26,41 @@ class ImportSCR:
             offset_offsets_models = header[3]
         
             f.seek(offset_offsets_models)
-            offsets_models = struct.unpack(f'<{num_models}I', f.read(num_models * 4))
+            offsets_models = list(struct.unpack(f'<{num_models}I', f.read(num_models * 4)))
             print('Offsets found')
         
             model_headers = []
-            for i in range(num_models):
-                f.seek(offsets_models[i])
+            for offset in offsets_models:
+                f.seek(offset)
                 model_header = struct.unpack('<I64s9f18h', f.read(140))
                 model_headers.append(model_header)
                 print('Model header read')
         
-            model_data = []
-            for i in range(num_models):
-                f.seek(model_headers[i][0])
-                if i == num_models - 1:
-                    size = os.path.getsize(file_path) - model_headers[i][0]
-                else:
-                    size = offsets_models[i+1] - model_headers[i][0]
+            # add endpoint value
+            offsets_models.append(os.path.getsize(file_path))
+            
+            #model_data = []
+            for i, model_header in enumerate(model_headers):
+                f.seek(model_header[0])
+                size = offsets_models[i+1] - model_header[0]
                 if size > 0:
                     model = f.read(size)
-                    model_data.append(model)
+                    #model_data.append(model)
                     print('SCR read completed')
                     print('Beginning extract')
                     if not os.path.exists(head + '/extracted_scr'):
                         os.makedirs(head + '/extracted_scr')
-                
-                    for i, (header, model) in enumerate(zip(model_headers, model_data)):
-                        file_name = header[1].decode('utf-8').rstrip('\x00')
-                        file_path = f"{head}/extracted_scr/{file_name}.wmb"
-                        with open(file_path, 'wb') as f2:
-                            f2.write(model)
+                    
+                    # if this ever breaks, it may be because it used to be inside a seemingly redundant loop
+                    file_name = model_header[1].decode('utf-8').rstrip('\x00')
+                    file_path = f"{head}/extracted_scr/{file_name}.wmb"
+                    with open(file_path, 'wb') as f2:
+                        f2.write(model)
+                    
                     print('SCR extract completed')
                     if not (context):
                         print('Beginning WMB import')                    
-                        ImportSCR.import_models(file_path, header)  
+                        ImportSCR.import_models(file_path, model_header)  
                         
                 print('SCR extract completed')
         
@@ -126,7 +127,10 @@ class ImportSCR:
 
     @staticmethod
     def import_models(file_path, scr_header):
-            wmb_importer.main(False, file_path, scr_header[2:11])
+        wmb_importer.main(False, file_path, scr_header[2:11])
+        # TODO this is out of place, integrate with wmb if possible
+        name = scr_header[1].decode('utf-8').rstrip('\x00')
+        bpy.data.collections[name]["mystery_int16s"] = scr_header[11:]
 
 def reset_blend():
     #bpy.ops.object.mode_set(mode='OBJECT')
