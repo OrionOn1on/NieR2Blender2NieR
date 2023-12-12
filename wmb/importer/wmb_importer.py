@@ -862,79 +862,80 @@ def load_mysterychunk(chunk, collection_name):
     mset("mystery", True)
     
     for i, one in enumerate(chunk.mystery1):
-        mset("1-%d-name"%i, one.name)
-        mset("1-%d-A"%i, one.mysteryA)
-        mset("1-%d-B"%i, one.mysteryB)
+        mset("1-%2d-name"%i, one.name)
+        mset("1-%2d-parent"%i, one.mysteryA)
+        mset("1-%2d-B"%i, one.mysteryB)
     
     for i, two in enumerate(chunk.mystery2):
-        mset("2-%d-A"%i, two.posA)
-        mset("2-%d-Aflag"%i, two.flagA)
-        mset("2-%d-B"%i, two.posB)
-        mset("2-%d-Bflag"%i, two.flagB)
-        mset("2-%d-C"%i, two.posC)
-        mset("2-%d-Cflag"%i, two.flagC)
-        mset("2-%d-D"%i, two.posD)
+        mset("2-%2d-A"%i, two.posA)
+        mset("2-%2d-Aflag"%i, two.flagA)
+        mset("2-%2d-B"%i, two.posB)
+        mset("2-%2d-Bflag"%i, two.flagB)
+        mset("2-%2d-C"%i, two.posC)
+        mset("2-%2d-Cflag"%i, two.flagC)
+        mset("2-%2d-D"%i, two.posD)
     
     for i, three in enumerate(chunk.mystery3):
         for j, content in enumerate(three.vectors):
-            mset("3-%d-%d-0"%(i,j), content.mysteryA)
-            mset("3-%d-%d-1"%(i,j), content.mysteryB)
-            mset("3-%d-%d-2"%(i,j), content.mysteryC)
-            mset("3-%d-%d-3"%(i,j), content.mysteryD)
+            mset("3-%2d-%2d-0"%(i,j), content.mysteryA)
+            mset("3-%2d-%2d-1"%(i,j), content.mysteryB)
+            mset("3-%2d-%2d-2"%(i,j), content.mysteryC)
+            mset("3-%2d-%2d-3"%(i,j), content.mysteryD)
     
     for i, four in enumerate(chunk.mystery4):
-        mset("4-%d-A"%i, four.posA)
-        mset("4-%d-B"%i, four.posB)
-        mset("4-%d-C"%i, four.posC)
-        mset("4-%d-D"%i, four.mysteryA)
-        mset("4-%d-E"%i, four.mysteryB)
-        mset("4-%d-startIndexA"%i, four.startIndexA)
-        mset("4-%d-indexCountA"%i, four.indexCountA)
-        mset("4-%d-startIndexB"%i, four.startIndexB)
-        mset("4-%d-indexCountB"%i, four.indexCountB)
+        mset("4-%2d-A"%i, four.posA)
+        mset("4-%2d-B"%i, four.posB)
+        mset("4-%2d-C"%i, four.posC)
+        mset("4-%2d-D"%i, four.mysteryA)
+        mset("4-%2d-E"%i, four.mysteryB)
+        mset("4-%2d-startIndexA"%i, four.startIndexA)
+        mset("4-%2d-indexCountA"%i, four.indexCountA)
+        mset("4-%2d-startIndexB"%i, four.startIndexB)
+        mset("4-%2d-indexCountB"%i, four.indexCountB)
     
     for i, five in enumerate(chunk.mystery5):
-        mset("5-%d-A"%i, five.mysteryA)
-        mset("5-%d-B"%i, five.mysteryB)
-        mset("5-%d-C"%i, five.mysteryC)
+        mset("5-%2d-A"%i, five.mysteryA)
+        mset("5-%2d-B"%i, five.mysteryB)
+        mset("5-%2d-C"%i, five.mysteryC)
+        mset("5-%2d-C2"%i, five.mysteryC2)
         
         for j, content in enumerate(five.mysteryD):
-            mset("5-%d-D-%d"%(i,j), content.content)
+            mset("5-%2d-D-%2d"%(i,j), content.content)
     
     for i, six in enumerate(chunk.mystery6):
         sixAFlat = []
         for vec in six.mysteryA:
             sixAFlat.extend([vec.x, vec.y, vec.z, vec.w])
-        mset("6-%d-A"%i, sixAFlat)
-        mset("6-%d-B"%i, six.mysteryB)
+        mset("6-%2d-A"%i, sixAFlat)
+        mset("6-%2d-B"%i, six.mysteryB)
     
     for i, seven in enumerate(chunk.mystery7):
-        mset("7-%d-A"%i, seven.unknownA)
-        mset("7-%d-B"%i, seven.unknownB)
-        mset("7-%d-C"%i, seven.unknownC)
-        mset("7-%d-D"%i, seven.unknownD)
-        mset("7-%d-E"%i, seven.unknownE)
-        mset("7-%d-F"%i, seven.unknownF)
+        mset("7-%2d-A"%i, seven.unknownA)
+        mset("7-%2d-B"%i, seven.unknownB)
+        mset("7-%2d-C"%i, seven.unknownC)
+        mset("7-%2d-D"%i, seven.unknownD)
+        mset("7-%2d-E"%i, seven.unknownE)
+        mset("7-%2d-F"%i, seven.unknownF)
     
     for i, eight in enumerate(chunk.mystery8):
         eightVectorsFlat = []
         for vec in eight.vectors:
             eightVectorsFlat.extend(vec)
-        mset("8-%d-vectors"%i, eightVectorsFlat)
-        mset("8-%d-A"%i, eight.mysteryA)
-        mset("8-%d-B"%i, eight.mysteryB)
-        mset("8-%d-C"%i, eight.mysteryC)
-        mset("8-%d-D"%i, eight.mysteryD)
-        mset("8-%d-E"%i, eight.mysteryE)
-        mset("8-%d-F"%i, eight.mysteryF)
-        mset("8-%d-G"%i, eight.mysteryG)
+        mset("8-%2d-vectors"%i, eightVectorsFlat)
+        mset("8-%2d-A"%i, eight.mysteryA)
+        mset("8-%2d-B"%i, eight.mysteryB)
+        mset("8-%2d-C"%i, eight.mysteryC)
+        mset("8-%2d-D"%i, eight.mysteryD)
+        mset("8-%2d-E"%i, eight.mysteryE)
+        mset("8-%2d-F"%i, eight.mysteryF)
+        mset("8-%2d-G"%i, eight.mysteryG)
     
     for i, nine in enumerate(chunk.mystery9):
-        mset("9-%d-A"%i, nine.mysteryA)
-        mset("9-%d-B"%i, nine.mysteryB)
-        mset("9-%d-C"%i, nine.mysteryC)
-        mset("9-%d-D"%i, nine.mysteryD)
-        mset("9-%d-E"%i, nine.mysteryE)
+        mset("9-%2d-A"%i, nine.mysteryA)
+        mset("9-%2d-B"%i, nine.mysteryB)
+        mset("9-%2d-C"%i, nine.mysteryC)
+        mset("9-%2d-D"%i, nine.mysteryD)
+        mset("9-%2d-E"%i, nine.mysteryE)
 
 def main(only_extract = False, wmb_file = os.path.join(os.path.split(os.path.realpath(__file__))[0], 'test', 'pl0000.dtt', 'pl0000.wmb'), scr_header = None):
     #reset_blend()
