@@ -701,6 +701,16 @@ def format_wmb_mesh(wmb, collection_name, scr_header=None):
             
             meshName = "%d-%s"%(batch.vertexGroupIndex, mesh.name)
             
+            materials = [batchData.materialIndex]
+            if (len(mesh.materials) == 0) or materials[0] not in mesh.materials:
+                print("Huh, mismatched material index.")
+                print(materials, mesh.materials)
+                materials.extend(mesh.materials)
+            else:
+                print("A material matches")
+                print(materials, mesh.materials)
+                materials = mesh.materials
+            
             obj = construct_mesh([
                 meshName,    # meshName
                 meshInfo[0], # vertices
@@ -717,7 +727,7 @@ def format_wmb_mesh(wmb, collection_name, scr_header=None):
                 mesh.boundingBox,       # boundingBox
                 batch.vertexGroupIndex, # vertexGroupIndex
                 batchIndex,
-                [batchData.materialIndex],
+                materials,
                 wmb.boneSetArray[batchData.boneSetsIndex] if batchData.boneSetsIndex > -1 else None, # boneSet
                 meshInfo[5], # vertexStart
                 batch.batchGroup,       # batch group, which of the four supplements
