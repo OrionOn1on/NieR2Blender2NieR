@@ -12,14 +12,14 @@ from ...wta_wtp.importer.wta import *
 DEBUG_HEADER_PRINT = True
 DEBUG_VERTEXGROUP_PRINT = False
 #DEBUG_VERTEX_PRINT = # Don't even *think* about it.
-DEBUG_BATCHES_PRINT = False
-DEBUG_BATCHSUPPLEMENT_PRINT = True
+DEBUG_BATCHES_PRINT = True
+DEBUG_BATCHSUPPLEMENT_PRINT = False
 DEBUG_BONE_PRINT = False # do not recommend, there can be lots of bones
 DEBUG_BITT_PRINT = False # nothing at all
 DEBUG_BONESET_PRINT = False
 DEBUG_MATERIAL_PRINT = True
-DEBUG_TEXTURE_PRINT = True # pretty short, pretty worthwhile
-DEBUG_MESH_PRINT = False
+DEBUG_TEXTURE_PRINT = True# pretty short, pretty worthwhile
+DEBUG_MESH_PRINT = True
 DEBUG_MYSTERY_PRINT = True
 
 class WMB_Header(object):
@@ -677,7 +677,7 @@ class wmb4_batch(object):
         self.numIndexes = read_uint32(wmb_fp)
         if DEBUG_BATCHES_PRINT:
             print(" ",
-              self.vertexGroupIndex.ljust(10, " "),
+              "%9d" % self.vertexGroupIndex,
               ("%d-%d" % (self.vertexStart, self.vertexStart + self.numVertexes)).ljust(11, " "),
               ("%d-%d" % (self.indexStart, self.indexStart + self.numIndexes))
             )
@@ -875,6 +875,8 @@ class wmb4_mesh(object):
             print("Batches:", self.batches0, self.batches1, self.batches2, self.batches3)
         
         self.materials = load_data_array(wmb_fp, self.materialsPointer, self.materialsCount, uint16)
+        if DEBUG_MESH_PRINT:
+            print("Materials:", self.materialsCount, self.materials)
 
 class wmb4_texture(object):
     """The WMB4 texture is delightfully simple."""
@@ -1562,7 +1564,7 @@ class WMB(object):
             
             if DEBUG_MATERIAL_PRINT:
                 print()
-                print("Material info (specifically textures, not shaders; not yet):")
+                print("Material info:")
             self.materialArray = load_data_array(wmb_fp, self.wmb_header.materialPointer, self.wmb_header.materialCount, wmb4_material)
             
             if DEBUG_TEXTURE_PRINT:
@@ -1570,7 +1572,7 @@ class WMB(object):
                 print("Just have the textures array if you care so bad")
             self.textureArray = load_data_array(wmb_fp, self.wmb_header.texturePointer, self.wmb_header.textureCount, wmb4_texture)
             if DEBUG_TEXTURE_PRINT:
-                print([(item.id, hex(item.flags)) for item in self.textureArray])
+                print("\n".join([str([item.id, hex(item.flags)]) for item in self.textureArray]))
             
             if DEBUG_MESH_PRINT:
                 print()

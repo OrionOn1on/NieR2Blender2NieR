@@ -1109,8 +1109,10 @@ class c_meshes(object):
 
             meshes_added = []
             # first name pointer is aligned
+            catchPadding = 0
             if wmb4 and ((offsetMeshes + numMeshes*68) % 16 > 0):
-                offsetMeshes += 16 - ((offsetMeshes + numMeshes*68) % 16)
+                catchPadding = 16 - ((offsetMeshes + numMeshes*68) % 16)
+                offsetMeshes += catchPadding
             
             for meshName in meshNamesSorted:
                 for obj in (x for x in allObjectsInCollectionInOrder('WMB') if x.type == "MESH"):
@@ -1126,7 +1128,7 @@ class c_meshes(object):
                             offsetMeshes -= 68 if wmb4 else 44
                             break
 
-            return meshes
+            return meshes, catchPadding
 
         def get_meshes_StructSize(self, meshes):
             meshes_StructSize = 0
@@ -1134,9 +1136,11 @@ class c_meshes(object):
                 meshes_StructSize += mesh.mesh_StructSize
             return meshes_StructSize
 
-        self.meshes = get_meshes(self, offsetMeshes)
+        self.meshes, catchPadding = get_meshes(self, offsetMeshes)
 
-        self.meshes_StructSize = get_meshes_StructSize(self, self.meshes)
+        #self.meshes_StructSize = newOffset - offsetMeshes
+        #print(newOffset, newOffset - offsetMeshes)
+        self.meshes_StructSize = get_meshes_StructSize(self, self.meshes) + catchPadding
 
 class c_meshMaterials(object):
     def __init__(self): # formerly took meshes and lods, now re-generates
@@ -1841,8 +1845,8 @@ class c_vertexGroups(object):
         for obj in allMeshes:
             obj['ID'] = allIDs.index(obj['ID']) # masterstroke
         
-        print("New IDs generated:")
-        print([(obj.name, obj['ID']) for obj in allMeshes])
+        print("New IDs generated.")
+        #print([(obj.name, obj['ID']) for obj in allMeshes])
         
 
         def get_vertexGroups(self, offsetVertexGroups):
@@ -2112,7 +2116,8 @@ class c_generate_data(object):
                 print('boneIndexTranslateTable_Size: ', self.boneIndexTranslateTable_Size)
 
                 # psyche, this one is padded
-                if (currentOffset % 16) > 0:
+                #if (currentOffset % 16) > 0:
+                if True: # ???
                     currentOffset += 16 - (currentOffset % 16)
             else:
                 self.bones_Offset = 0

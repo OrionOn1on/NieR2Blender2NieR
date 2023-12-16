@@ -444,6 +444,7 @@ def create_wmb_meshes(wmb_file, data, wmb4=False):
 
     for mesh in data.meshes.meshes:
         wmb_file.seek(mesh.nameOffset)
+        #print(wmb_file.tell(), mesh.name)
         write_string(wmb_file, mesh.name)                   # name
         if wmb4:
             wmb_file.seek(mesh.batch0Pointer)
@@ -526,10 +527,10 @@ def create_wmb_mystery(wmb_file, data): # i'm sure we'll be editing this in a ji
         write_vector3(wmb_file, mystery4["C"])
         write_uInt32(wmb_file, mystery4["D"])
         write_uInt32(wmb_file, mystery4["offset"])
-        write_uInt32(wmb_file, mystery4["startIndexA"])
-        write_uInt32(wmb_file, mystery4["indexCountA"])
-        write_uInt32(wmb_file, mystery4["startIndexB"])
-        write_uInt32(wmb_file, mystery4["indexCountB"])
+        write_uInt32(wmb_file, mystery4["startVertex"])
+        write_uInt32(wmb_file, mystery4["vertexCount"])
+        write_uInt32(wmb_file, mystery4["startIndex"])
+        write_uInt32(wmb_file, mystery4["indexCount"])
         pos = wmb_file.tell()
         wmb_file.seek(mystery4["offset"])
         for val in mystery4["E"]: # 20

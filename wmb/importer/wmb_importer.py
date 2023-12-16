@@ -896,12 +896,14 @@ def load_mysterychunk(chunk, collection_name):
         mset("4-%2d-A"%i, four.posA)
         mset("4-%2d-B"%i, four.posB)
         mset("4-%2d-C"%i, four.posC)
-        mset("4-%2d-D"%i, four.mysteryA)
+        mset("4-%2d-D"%i, four.mysteryA) # always 0 or 1??
         mset("4-%2d-E"%i, four.mysteryB)
-        mset("4-%2d-startIndexA"%i, four.startIndexA)
-        mset("4-%2d-indexCountA"%i, four.indexCountA)
-        mset("4-%2d-startIndexB"%i, four.startIndexB)
-        mset("4-%2d-indexCountB"%i, four.indexCountB)
+        mset("4-%2d-startVertex"%i, four.startIndexA)
+        mset("4-%2d-vertexCount"%i, four.indexCountA)
+        mset("4-%2d-startIndex"%i, four.startIndexB)
+        mset("4-%2d-indexCount"%i, four.indexCountB)
+    #_4D = [x.mysteryA for x in chunk.mystery4]
+    #print(min(_4D), max(_4D), _4D)
     
     for i, five in enumerate(chunk.mystery5):
         mset("5-%2d-A"%i, five.mysteryA)
@@ -911,6 +913,19 @@ def load_mysterychunk(chunk, collection_name):
         
         for j, content in enumerate(five.mysteryD):
             mset("5-%2d-D-%2d"%(i,j), content.content)
+    myList = [x.mysteryA for x in chunk.mystery5]
+    print("5A:")
+    print(min(myList), max(myList), myList)
+    myList = [x.mysteryB for x in chunk.mystery5]
+    print("5B:")
+    print(min(myList), max(myList), myList)
+    myList = [x.mysteryC for x in chunk.mystery5]
+    print("5C:")
+    print(min(myList), max(myList), myList)
+    myList = [x.mysteryC2 for x in chunk.mystery5]
+    print("5C2:")
+    print(min(myList), max(myList), myList)
+    print()
     
     for i, six in enumerate(chunk.mystery6):
         sixAFlat = []
@@ -918,6 +933,9 @@ def load_mysterychunk(chunk, collection_name):
             sixAFlat.extend([vec.x, vec.y, vec.z, vec.w])
         mset("6-%2d-A"%i, sixAFlat)
         mset("6-%2d-B"%i, six.mysteryB)
+    myList = [x.mysteryB for x in chunk.mystery6]
+    print("6B:")
+    print(min([min(x) for x in myList]), max([max(x) for x in myList]), myList)
     
     for i, seven in enumerate(chunk.mystery7):
         mset("7-%2d-A"%i, seven.unknownA)
@@ -926,6 +944,18 @@ def load_mysterychunk(chunk, collection_name):
         mset("7-%2d-D"%i, seven.unknownD)
         mset("7-%2d-E"%i, seven.unknownE)
         mset("7-%2d-F"%i, seven.unknownF)
+    myList = [x.unknownC for x in chunk.mystery7]
+    print("7C:")
+    print(min(myList), max(myList), myList)
+    myList = [x.unknownD for x in chunk.mystery7]
+    print("7D:")
+    print(min(myList), max(myList), myList)
+    myList = [x.unknownE for x in chunk.mystery7]
+    print("7E:")
+    print(min(myList), max(myList), myList)
+    myList = [x.unknownF for x in chunk.mystery7]
+    print("7F:")
+    print(min(myList), max(myList), myList)
     
     for i, eight in enumerate(chunk.mystery8):
         eightVectorsFlat = []
@@ -939,6 +969,24 @@ def load_mysterychunk(chunk, collection_name):
         mset("8-%2d-E"%i, eight.mysteryE)
         mset("8-%2d-F"%i, eight.mysteryF)
         mset("8-%2d-G"%i, eight.mysteryG)
+    myList = [x.mysteryA for x in chunk.mystery8]
+    print("8A:")
+    print(min(myList), max(myList), myList)
+    myList = [x.mysteryC for x in chunk.mystery8]
+    print("8C:")
+    print(min(myList), max(myList), myList)
+    myList = [x.mysteryD for x in chunk.mystery8]
+    print("8D:")
+    print(min(myList), max(myList), myList)
+    myList = [x.mysteryE for x in chunk.mystery8]
+    print("8E:")
+    print(min(myList), max(myList), myList)
+    myList = [x.mysteryF for x in chunk.mystery8]
+    print("8F:")
+    print(min(myList), max(myList), myList)
+    myList = [x.mysteryG for x in chunk.mystery8]
+    print("8G:")
+    print(min(myList), max(myList), myList)
     
     for i, nine in enumerate(chunk.mystery9):
         mset("9-%2d-A"%i, nine.mysteryA)
@@ -946,6 +994,22 @@ def load_mysterychunk(chunk, collection_name):
         mset("9-%2d-C"%i, nine.mysteryC)
         mset("9-%2d-D"%i, nine.mysteryD)
         mset("9-%2d-E"%i, nine.mysteryE)
+    myList = [x.mysteryA for x in chunk.mystery9]
+    print("9A:")
+    print(min(myList), max(myList), myList)
+    myList = [x.mysteryB for x in chunk.mystery9]
+    print("9B:")
+    print(min(myList), max(myList), myList)
+    myList = [x.mysteryC for x in chunk.mystery9]
+    print("9C:")
+    print(min(myList), max(myList), myList)
+    myList = [x.mysteryD for x in chunk.mystery9]
+    print("9D:")
+    print(min(myList), max(myList), myList)
+    myList = [x.mysteryE for x in chunk.mystery9]
+    print("9E:")
+    print(min(myList), max(myList), myList)
+    print("\n\n")
 
 def main(only_extract = False, wmb_file = os.path.join(os.path.split(os.path.realpath(__file__))[0], 'test', 'pl0000.dtt', 'pl0000.wmb'), scr_header = None):
     #reset_blend()
