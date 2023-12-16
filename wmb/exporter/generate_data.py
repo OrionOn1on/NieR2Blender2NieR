@@ -942,6 +942,8 @@ class c_mesh(object):
                                     materials.append(matID)
                                     
             materials.sort()
+            if self.name == "head":
+                materials = materials[:3]
             return materials
 
         def get_bones(self, obj):
@@ -1474,7 +1476,8 @@ class c_vertexGroup(object):
         # 4 UVs = 14
         # 5 UVs = 12
         # Has Color = 4, 5, 10, 11, 12, 14
-
+        
+        #print(len(self.blenderObjects[0].data.uv_layers))
         if len(self.blenderObjects[0].data.uv_layers) == 1:         # 0
             self.vertexFlags = 0
         elif len(self.blenderObjects[0].data.uv_layers) == 2:       # 1, 4, 7, 10
@@ -1503,6 +1506,7 @@ class c_vertexGroup(object):
             self.vertexFlags = 12
         else:
             print(" - UV Maps Error: No UV Map found!")
+            self.vertexFlags = 14
         
         #print("   Vertex Group %d has vertexFlags %d" % (vertexGroupIndex, self.vertexFlags))
         

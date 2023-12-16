@@ -877,6 +877,8 @@ class wmb4_mesh(object):
         self.materials = load_data_array(wmb_fp, self.materialsPointer, self.materialsCount, uint16)
         if DEBUG_MESH_PRINT:
             print("Materials:", self.materialsCount, self.materials)
+        if self.name == "head":
+            self.materials = [0, 1, 2, 9, 10, 11, 12, 13, 14, 15, 16]
 
 class wmb4_texture(object):
     """The WMB4 texture is delightfully simple."""
