@@ -942,7 +942,7 @@ class c_mesh(object):
                                     materials.append(matID)
                                     
             materials.sort()
-            if self.name == "head":
+            if self.name == "R_leg_A":
                 materials = materials[:3]
             return materials
 
