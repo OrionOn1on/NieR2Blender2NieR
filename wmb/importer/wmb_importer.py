@@ -709,7 +709,9 @@ def format_wmb_mesh(wmb, collection_name, scr_header=None):
             else:
                 print("A material matches")
                 print(materials, mesh.materials)
-                materials = mesh.materials
+                for mat in mesh.materials:
+                    if mat not in materials:
+                        materials.append(mat)
             
             obj = construct_mesh([
                 meshName,    # meshName
@@ -902,8 +904,9 @@ def load_mysterychunk(chunk, collection_name):
         mset("4-%2d-vertexCount"%i, four.indexCountA)
         mset("4-%2d-startIndex"%i, four.startIndexB)
         mset("4-%2d-indexCount"%i, four.indexCountB)
-    #_4D = [x.mysteryA for x in chunk.mystery4]
-    #print(min(_4D), max(_4D), _4D)
+    _4A = ["%d-%d %d-%d" % (x.startIndexA, x.startIndexA+x.indexCountA, x.startIndexB, x.startIndexB+x.indexCountB) for x in chunk.mystery4]
+    print("4 Vertexes and indexes:")
+    print("\n".join(_4A))
     
     for i, five in enumerate(chunk.mystery5):
         mset("5-%2d-A"%i, five.mysteryA)
