@@ -942,8 +942,8 @@ class c_mesh(object):
                                     materials.append(matID)
                                     
             materials.sort()
-            if self.name == "R_leg_A":
-                materials = materials[:3]
+            if self.name == "lowerLeg_dam1_LBODY_DEC":
+                materials = materials[:1]
             return materials
 
         def get_bones(self, obj):
