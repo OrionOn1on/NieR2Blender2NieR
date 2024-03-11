@@ -18,8 +18,6 @@ class ExportSCR(bpy.types.Operator, ExportHelper):
 
     def execute(self, context):
         from . import scr_exporter
-        if self.export_ly2:
-            print("LY2 Export: Not Implemented Yet")  
 
         #setExportFieldsFromImportFile(self.filepath, False)
         #enableVisibilitySelector()

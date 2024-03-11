@@ -73,11 +73,13 @@ class ImportSCR:
                 return {'FINISHED'}
             
             print("Loading props")
-            ly2.seek(8) # yeah we skip the flags
-            propTypeCount = struct.unpack("<I", ly2.read(4))[0]
-            ly2.seek(0x14) # start of main data
+            
+            (ly2Flags, propTypeCount, ly2MysteryPointer, ly2MysteryCount) = struct.unpack("<IIII", ly2.read(16))
+            
+            bpy.data.collections["WMB"]["ly2Flags"] = ly2Flags
+            
             for i in range(propTypeCount):
-                ly2.read(8) # some flags
+                instanceFlags = list(struct.unpack("<II", ly2.read(8)))
                 prop_category = ly2.read(2).decode("ascii")
                 if prop_category not in {"ba", "bh", "bm"}:
                     print("Prop category (%s) not in data001, skipping" % prop_category)
@@ -98,8 +100,7 @@ class ImportSCR:
                     print("Could not find %s to extract, skipping" % prop_name)
                     continue
                 
-                instancesPointer = struct.unpack("<I", ly2.read(4))[0]
-                instancesCount = struct.unpack("<I", ly2.read(4))[0]
+                (instancesPointer, instancesCount) = struct.unpack("<II", ly2.read(8))
                 resumePos = ly2.tell()
                 
                 ly2.seek(instancesPointer)
@@ -117,9 +118,25 @@ class ImportSCR:
                     elif import_mode == "wmb":
                         wmb_importer.main(False, prop_path, prop_transform)
                     
+                    if j == 0:
+                        bpy.data.collections[prop_name]["flags"] = instanceFlags
+                
                 
                 ly2.seek(resumePos)
                 
+            # read mystery chunk into custom properties
+            ly2.seek(ly2MysteryPointer)
+            ly2OtherFlags = []
+            ly2MysteryB = []
+            ly2MysteryC = []
+            for i in range(ly2MysteryCount):
+                ly2OtherFlags.append(struct.unpack("<I", ly2.read(4))[0])
+                ly2MysteryB.append(struct.unpack("<I", ly2.read(4))[0])
+                ly2MysteryC.append(struct.unpack("<I", ly2.read(4))[0])
+            
+            bpy.data.collections["WMB"]["ly2OtherFlags"] = ly2OtherFlags
+            bpy.data.collections["WMB"]["ly2MysteryB"] = ly2MysteryB
+            bpy.data.collections["WMB"]["ly2MysteryC"] = ly2MysteryC
             
             ly2.close()
         

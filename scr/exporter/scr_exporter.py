@@ -111,67 +111,55 @@ def main(file_path, do_ly2):
             print('Model written')
     
     if do_ly2:
-        print("LY2 NOT IMPLEMENTED")
-        return {'FINISHED'}
-        """
         # prop export
         # bad practice but I'll be, uh, not making an LY2 format
-        ly2 = open(file_path[:-3] + "ly2", "rb")
-        if ly2.read(4) != b'LY2\x00':
-            print("Error in prop load: not LY2 format")
-            return {'FINISHED'}
+        ly2 = open(file_path[:-3] + "ly2", "wb")
+        ly2.write(b"LY2\x00")
         
-        print("Loading props")
-        ly2.seek(8) # yeah we skip the flags
-        propTypeCount = struct.unpack("<I", ly2.read(4))[0]
+        print("Saving props")
+        
+        prop_types = sorted(list(set([x.name[0:6] for x in prop_models])))
+        WMBCol = bpy.data.collections["WMB"]
+        instancesPointer = 0x14 + 20 * len(prop_types)
+        ly2MysteryPointer = instancesPointer + 40 * len(prop_models)
+        #ly2MysteryPointer += 16 - (ly2MysteryPointer % 16)
+        
+        ly2.write(struct.pack("<IIII", WMBCol["ly2Flags"], len(prop_types), ly2MysteryPointer, len(WMBCol["ly2OtherFlags"])))
         ly2.seek(0x14) # start of main data
-        for i in range(propTypeCount):
-            ly2.read(8) # some flags
-            prop_category = ly2.read(2).decode("ascii")
-            if prop_category not in {"ba", "bh", "bm"}:
-                print("Prop category (%s) not in data001, skipping" % prop_category)
-                continue
-            prop_id = "%04x" % struct.unpack("<H", ly2.read(2))[0]
-            prop_name = prop_category + prop_id
-            # for my next trick, I shall escape the Matrix
-            if os.path.exists(head + "/../" + prop_name + ".dat"):
-                # already extracted to n2b2n_extracted
-                export_mode = "wmb"
-                prop_path = head + "/../" + prop_name + ".dat/" + prop_name + ".wmb"
-            elif os.path.exists(head + "/../../../" + prop_category + "/" + prop_name + ".dtt"):
-                # go up to its original home
-                export_mode = "dtt"
-                prop_path = head + "/../../../" + prop_category + "/" + prop_name + ".dtt"
-            else:
-                # no i'm not making an extra cpk extractor
-                print("Could not find %s to extract, skipping" % prop_name)
-                continue
+        for propType in prop_types:
+            if "flags" not in bpy.data.collections[propType]:
+                bpy.data.collections[propType]["flags"] = [0, 0]
+            ly2.write(struct.pack("<I", bpy.data.collections[propType]["flags"][0])) # flags 1
+            ly2.write(struct.pack("<I", bpy.data.collections[propType]["flags"][1])) # flags 2
+            ly2.write(bytes(propType[0:2], "ascii"))
+            ly2.write(struct.pack("<H", int(propType[2:6], 16)))
+            # We don't write edited props; only their positions
             
-            instancesPointer = struct.unpack("<I", ly2.read(4))[0]
-            instancesCount = struct.unpack("<I", ly2.read(4))[0]
+            ly2.write(struct.pack("<I", instancesPointer))
+            models_of_type = sorted([x for x in prop_models if x.name[0:6] == propType], key=lambda x: x.name)
+            ly2.write(struct.pack("<I", len(models_of_type)))
             resumePos = ly2.tell()
             
             ly2.seek(instancesPointer)
-            for j in range(instancesCount):
-                posX, posY, posZ = struct.unpack("<fff", ly2.read(12))
-                scaleX, scaleY, scaleZ = struct.unpack("<fff", ly2.read(12))
-                rotX = rotZ = 0 # rotation is weirder
-                ly2.read(4)
-                rotY = struct.unpack("BBBB", ly2.read(4))[0]
-                ly2.read(8)
-                rotY *= 3.1415926535 / 0x80
-                prop_transform = [posX, posY, posZ, rotX, rotY, rotZ, scaleX, scaleY, scaleZ]
-                if export_mode == "dtt":
-                    datExportOperator.exportDtt(False, prop_path, prop_transform)
-                elif export_mode == "wmb":
-                    wmb_exporter.main(False, prop_path, prop_transform)
+            for modelCol in models_of_type:
+                model = [x for x in modelCol.all_objects if x.type == "MESH"][0]
+                ly2.write(struct.pack("<fff", model.location[0], model.location[2], -model.location[1]))
+                ly2.write(struct.pack("<fff", model.scale[0], model.scale[2], model.scale[1]))
+                rotY = model.rotation_euler[2] * 0x80 / 3.1415926535 # I do not claim to understand.
+                ly2.write(struct.pack("<fBBBBfi", 0, int(rotY), 0, 0, 0, 0, -1))
+                instancesPointer += 40
                 
             
             ly2.seek(resumePos)
-            
+        
+        ly2.seek(ly2MysteryPointer)
+        for i in range(len(WMBCol["ly2OtherFlags"])):
+            ly2.write(struct.pack("<I", WMBCol["ly2OtherFlags"][i]))
+            ly2.write(struct.pack("<I", WMBCol["ly2MysteryB"][i]))
+            ly2.write(struct.pack("<I", WMBCol["ly2MysteryC"][i]))
         
         ly2.close()
-        """
+        
     
     return {'FINISHED'}
 
