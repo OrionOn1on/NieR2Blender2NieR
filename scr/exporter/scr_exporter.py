@@ -144,7 +144,7 @@ def main(file_path, do_ly2):
             for modelCol in models_of_type:
                 model = [x for x in modelCol.all_objects if x.type == "MESH"][0]
                 ly2.write(struct.pack("<fff", model.location[0], model.location[2], -model.location[1]))
-                ly2.write(struct.pack("<fff", model.scale[0], model.scale[2], model.scale[1]))
+                ly2.write(struct.pack("<fff", model.scale[0], model.scale[1], model.scale[2]))
                 rotY = model.rotation_euler[2] * 0x80 / 3.1415926535 # I do not claim to understand.
                 ly2.write(struct.pack("<fBBBBfi", 0, int(rotY), 0, 0, 0, 0, -1))
                 instancesPointer += 40

@@ -214,7 +214,7 @@ def construct_mesh(mesh_data, collection_name):
             #print(mesh_data[19])
             obj.location = Vector((transform[0], -transform[2], transform[1]))
             obj.rotation_euler = (math.radians(90) + transform[3], transform[5], transform[4])
-            obj.scale = Vector((transform[6], transform[8], transform[7]))
+            obj.scale = Vector((transform[6], transform[7], transform[8]))
 
     obj.data.flip_normals()
     
